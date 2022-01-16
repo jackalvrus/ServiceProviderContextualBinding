@@ -74,7 +74,7 @@ namespace ServiceProviderContextualBinding.Tests
         }
 
         [Test]
-        public void TwoConsumersWithAdditionalReplacement()
+        public void TwoConsumersWithInterleavedReplacement()
         {
             _services.WithReplacement(typeof(ReplacementService1))
                 .Add(typeof(IConsumer1), typeof(Consumer1), ServiceLifetime.Transient)
@@ -105,6 +105,40 @@ namespace ServiceProviderContextualBinding.Tests
             var act = () => provider.GetService<IConsumer1>();
 
             act.Should().Throw<InvalidOperationException>();
+        }
+
+        [Test]
+        public void MarkerInterface()
+        {
+            _services.AddSingleton<IService1Marker, ReplacementServiceWithMarker>();
+            _services.WithReplacement<IService1, IService1Marker>()
+                .Add(typeof(IConsumer1), typeof(Consumer1), ServiceLifetime.Transient);
+            var provider = _services.BuildServiceProvider();
+
+            var consumer = provider.GetService<IConsumer1>();
+
+            consumer.Should().NotBeNull();
+            consumer.ServiceType1.Should().Be<ReplacementServiceWithMarker>();
+            consumer.ServiceType2.Should().Be<DefaultService2>();
+            consumer.ServiceType3.Should().Be<DefaultService3>();
+        }
+
+        [Test]
+        public void AmbiguousReplacement_AVOID_THIS()
+        {
+            _services.AddSingleton<ReplacementService1and2>();
+            _services.WithReplacement(typeof(ReplacementService1and2))
+                .Add(typeof(IConsumer1), typeof(Consumer1), ServiceLifetime.Transient);
+            var provider = _services.BuildServiceProvider();
+
+            var consumer = provider.GetService<IConsumer1>();
+
+            consumer.Should().NotBeNull();
+            consumer.ServiceType1.Should().Be<ReplacementService1and2>();
+            // Even though ReplacementService1_2 matches IService2,
+            // it is only used for the one of the constructor arguments.
+            consumer.ServiceType2.Should().Be<DefaultService2>();
+            consumer.ServiceType3.Should().Be<DefaultService3>();
         }
 
         [Test]
