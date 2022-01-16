@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace ServiceProviderContextualBinding
 {
+    /// <summary>
+    /// Captures the context required to register services with replacement dependencies.
+    /// </summary>
     public struct ReplacementContext
     {
         public ReplacementContext(

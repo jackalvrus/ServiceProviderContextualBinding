@@ -35,7 +35,9 @@ public class Consumer
 
 ## Registering Replacement Services
 
-Services must be registered with the container in order to be used as replacements. You should not register replacements as the implemented service type. For example, avoid this:
+Services must be registered with the container in order to be used as replacements. If a replacement service is not registered, an exception will be thrown when the service that references the replacement is resolved.
+
+You should not register replacements as the implemented service type. For example, avoid this:
 
 ``` CSharp
 services.AddSingleton<IService, DefaultService>();
