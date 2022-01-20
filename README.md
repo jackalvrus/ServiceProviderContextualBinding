@@ -1,5 +1,7 @@
 # ServiceProviderContextualBinding - An extension for [Microsoft.Extensions.DependencyInjection](https://docs.microsoft.com/en-us/dotnet/api/microsoft.extensions.dependencyinjection?view=dotnet-plat-ext-6.0) to create contextual bindings.
 
+[![NuGet version](https://badge.fury.io/nu/ServiceProviderContextualBinding.svg)](https://badge.fury.io/nu/ServiceProviderContextualBinding)
+
 The default Microsoft dependency injection (DI) provider does not provide many of the advanced features of third party providers like [Autofac](https://autofac.org/) and [Ninject](http://www.ninject.org/). One of the features that it does not provide is contextual binding. This package provides a simple form of contextual binding where the default implementation for one or more services can be replaced on a per-registration basis.
 
 ## Example
